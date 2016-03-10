@@ -8,12 +8,27 @@ function row(cellIndex) {
   return Math.floor(cellIndex / 9) + 1;
 }
 
+function cellsInRow(row) {
+  var index = (row - 1) * 9;
+  return board.slice(index, index + 9);
+}
+
 function col(cellIndex) {
   return cellIndex % 9 + 1;
 }
 
-function quadrant(cellIndex) {
+function cellsInCol(col) {
+  var indices = [];
+  for (var row = 0; row < 9; row++) {
+    indices = indices.concat(col - 1 + row * 9);
+  }
+  return indices.map(function(i) {
+    return board[i];
+  });
+}
 
+function quadrant(cellIndex) {
+  return Math.floor((row(cellIndex) - 1) / 3) * 3 + Math.floor((col(cellIndex) - 1) / 3) + 1;
 }
 
 function render() {
@@ -98,3 +113,4 @@ Array.prototype.remove = function(value) {
 
 // TODO
 // decouple data structure
+
