@@ -1,55 +1,58 @@
-// render
-// board object
-// solving functions
-//
-
 // establish board
-var board = {};
-for (var row = 0; row < 9; row++) {
-  board[row] = {};
-  for (var col = 0; col < 9; col++) {
-    board[row][col] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  }
+var board = [];
+for (var cell = 0; cell < 81; cell++) {
+  board.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 }
 
-// render
+function row(cellIndex) {
+  return Math.floor(cellIndex / 9) + 1;
+}
+
+function col(cellIndex) {
+  return cellIndex % 9 + 1;
+}
+
+function quadrant(cellIndex) {
+
+}
+
 function render() {
   var $grid = $('<div>').attr('class', 'grid');
-  Object.keys(board).forEach(function(row) {
-    var $row = $('<div>').attr('class', 'row');
-    Object.keys(board[row]).forEach(function(col) {
-      var $col = $('<div>').attr('class', 'col cell')
-                           .html(board[row][col]);
-      $row.append($col);
-    });
-    $grid.append($row);
-  });
+  var $row = $('<div>').attr('class', 'row');
+  for (var i = 0; i < 81; i++) {
+    var $cell = $('<div>').attr('class', 'col cell')
+                          .html(board[i]);
+    $row.append($cell);
+    if (col(i) === 9) {
+      $grid.append($row);
+      var $row = $('<div>').attr('class', 'row');
+    }
+  }
   $('#grid-wrapper').html($grid);
 }
 
-// setup input
+// this needs to be refactored into above render at some point
 function setupInput() {
   var $grid = $('<div>').attr('class', 'grid');
-  Object.keys(board).forEach(function(row) {
-    var $row = $('<div>').attr('class', 'row');
-    Object.keys(board[row]).forEach(function(col) {
-      var $col = $('<div>').attr('class', 'col cell')
-                           .html($('<input>'));
-      $row.append($col);
-    });
-    $grid.append($row);
-  });
+  var $row = $('<div>').attr('class', 'row');
+  for (var i = 0; i < 81; i++) {
+    var $cell = $('<div>').attr('class', 'col cell')
+                          .html($('<input>'));
+    $row.append($cell);
+    if (col(i) === 9) {
+      $grid.append($row);
+      var $row = $('<div>').attr('class', 'row');
+    }
+  }
   $('#grid-wrapper').html($grid);
 }
 
 // apply input to board
 function applyInputToBoard() {
-  $.each($('.row'), function(row, rowElement) {
-    $.each($(rowElement).find('input'), function(col, input) {
-      if (input.value) {
-        board[row][col] = [parseInt(input.value, 10)];
-      }
-    });
+  $.each($('input'), function(i, input) {
+    if (input.value) {
+      board[i] = [parseInt(input.value, 10)];
+    }
   });
 }
 
