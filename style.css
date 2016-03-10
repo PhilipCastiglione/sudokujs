@@ -1,3 +1,41 @@
 * {
   background: linen;
 }
+
+.row,
+.col,
+.cell {
+  display: inline-block;
+}
+
+.cell {
+  border: 1px solid black;
+}
+
+.col:first-child {
+  border-left: 3px solid black;
+}
+
+.col:nth-child(3),
+.col:nth-child(6),
+.col:nth-child(9) {
+  border-right: 3px solid black;
+}
+
+.row:first-child {
+  border-top: 3px solid black;
+}
+
+.row:nth-child(3),
+.row:nth-child(6),
+.row:nth-child(9) {
+  border-bottom: 3px solid black;
+}
+
+.cell {
+  max-width: 10%;
+}
+
+input {
+  width: 100%;
+}
