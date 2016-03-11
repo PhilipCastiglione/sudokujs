@@ -1,4 +1,3 @@
-// establish board
 var board = [];
 for (var cell = 0; cell < 81; cell++) {
   board.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -91,7 +90,6 @@ function renderInput() {
   $('#grid-wrapper').html($grid);
 }
 
-// apply input to board
 function applyInputToBoard() {
   $.each($('input'), function(i, input) {
     if (input.value) {
@@ -100,12 +98,12 @@ function applyInputToBoard() {
   });
 }
 
-// solve
 function solve() {
-  clearSolvedCellRelatedCells();
+  updateSolvedCellRelatedCells();
+  // check if board has changed, if it has, start again, otherwise, keep going
 }
 
-function clearSolvedCellRelatedCells() {
+function updateSolvedCellRelatedCells() {
   board.forEach(function(cell, i) {
     if (cell.length === 1) {
       clearRowOfNumber(row(i), cell[0]);
