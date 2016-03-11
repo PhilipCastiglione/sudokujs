@@ -4,16 +4,16 @@ for (var cell = 0; cell < 81; cell++) {
   board.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 }
 
-function row(cellIndex) {
-  return Math.floor(cellIndex / 9) + 1;
+function row(index) {
+  return Math.floor(index / 9) + 1;
 }
 
-function col(cellIndex) {
-  return cellIndex % 9 + 1;
+function col(index) {
+  return index % 9 + 1;
 }
 
-function quadrant(cellIndex) {
-  return Math.floor((row(cellIndex) - 1) / 3) * 3 + Math.floor((col(cellIndex) - 1) / 3) + 1;
+function quadrant(index) {
+  return Math.floor((row(index) - 1) / 3) * 3 + Math.floor((col(index) - 1) / 3) + 1;
 }
 
 function cellsForIndices(indices) {
@@ -106,34 +106,17 @@ function applyInputToBoard() {
 
 // solve
 function solve() {
-  removeInvalidOptions();
+  clearSolvedCellRelatedCells();
 }
 
-function removeInvalidOptions() {
-  Object.keys(board).forEach(function(row) {
-    Object.keys(board[row]).forEach(function(col) {
-      if (board[row][col].length === 1) {
-        clearRowOfNumber(row, board[row][col][0]);
-        clearColOfNumber(col, board[row][col][0]);
-      }
-    });
+function clearSolvedCellRelatedCells() {
+  board.forEach(function(cell, i) {
+    if (cell.length === 1) {
+      clearRowOfNumber(row(i), cell[0]);
+      clearColOfNumber(col(i), cell[0]);
+      clearQuadrantOfNumber(quadrant(i), cell[0]);
+    }
   });
-}
-
-function clearRowOfNumber(row, number) {
-  for (var col = 0; col < 9; col++) {
-    if (board[row][col].length > 1) {
-      board[row][col].remove(number);
-    }
-  }
-}
-
-function clearColOfNumber(col, number) {
-  for (var row = 0; row < 9; row++) {
-    if (board[row][col].length > 1) {
-      board[row][col].remove(number);
-    }
-  }
 }
 
 Array.prototype.remove = function(value) {
@@ -144,6 +127,29 @@ Array.prototype.remove = function(value) {
   return this;
 };
 
-// TODO
-// decouple data structure
+function clearRowOfNumber(row, number) {
+  var indices = indicesInRow(row);
+  indices.forEach(function(i) {
+    if (board[i].length > 1) {
+      board[i].remove(number);
+    }
+  });
+}
 
+function clearColOfNumber(col, number) {
+  var indices = indicesInCol(col);
+  indices.forEach(function(i) {
+    if (board[i].length > 1) {
+      board[i].remove(number);
+    }
+  });
+}
+
+function clearQuadrantOfNumber(quadrant, number) {
+  var indices = indicesInQuadrant(quadrant);
+  indices.forEach(function(i) {
+    if (board[i].length > 1) {
+      board[i].remove(number);
+    }
+  });
+}
