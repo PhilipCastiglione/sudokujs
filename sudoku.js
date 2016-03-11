@@ -8,30 +8,47 @@ function row(cellIndex) {
   return Math.floor(cellIndex / 9) + 1;
 }
 
-function cellsInRow(row) {
-  var index = (row - 1) * 9;
-  return board.slice(index, index + 9);
-}
-
 function col(cellIndex) {
   return cellIndex % 9 + 1;
-}
-
-function cellsInCol(col) {
-  var indices = [];
-  for (var row = 0; row < 9; row++) {
-    indices = indices.concat(col - 1 + row * 9);
-  }
-  return indices.map(function(i) {
-    return board[i];
-  });
 }
 
 function quadrant(cellIndex) {
   return Math.floor((row(cellIndex) - 1) / 3) * 3 + Math.floor((col(cellIndex) - 1) / 3) + 1;
 }
 
-function render() {
+function cellsForIndices(indices) {
+  return indices.map(function(i) {
+    return board[i];
+  });
+}
+
+function indicesInRow(row) {
+  var index = (row - 1) * 9;
+  var indices = [];
+  for (var col = 0; col < 9; col++) {
+    indices = indices.concat(index + col);
+  }
+  return indices;
+}
+
+function indicesInCol(col) {
+  var indices = [];
+  for (var row = 0; row < 9; row++) {
+    indices = indices.concat(col - 1 + row * 9);
+  }
+  return indices;
+}
+
+function indicesInQuadrant(quadrant) {
+  var firstIndex = Math.floor((quadrant - 1) / 3) * 9 * 3 + (quadrant - 1) % 3 * 3;
+  var indices = [];
+  for (var i = 0; i < 9; i++) {
+    indices = indices.concat(firstIndex + Math.floor(i / 3) * 9 + i % 3);
+  }
+  return indices;
+}
+
+function renderBoard() {
   var $grid = $('<div>').attr('class', 'grid');
   var $row = $('<div>').attr('class', 'row');
   for (var i = 0; i < 81; i++) {
@@ -46,8 +63,24 @@ function render() {
   $('#grid-wrapper').html($grid);
 }
 
-// this needs to be refactored into above render at some point
-function setupInput() {
+// these need to be refactored into above render at some point
+function renderIndices() {
+  var $grid = $('<div>').attr('class', 'grid');
+  var $row = $('<div>').attr('class', 'row');
+  for (var i = 0; i < 81; i++) {
+    var $cell = $('<div>').attr('class', 'col cell')
+                          .html(i);
+    $row.append($cell);
+    if (col(i) === 9) {
+      $grid.append($row);
+      var $row = $('<div>').attr('class', 'row');
+    }
+  }
+  $('#grid-wrapper').html($grid);
+}
+
+
+function renderInput() {
   var $grid = $('<div>').attr('class', 'grid');
   var $row = $('<div>').attr('class', 'row');
   for (var i = 0; i < 81; i++) {
