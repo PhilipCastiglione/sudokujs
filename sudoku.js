@@ -113,6 +113,11 @@ function solve() {
     solve();
   } else {
     updateKnownSolvedCells();
+    if (initialChecksum !== boardChecksum()) {
+      solve();
+    } else {
+      updateIntraQuadrantSolvedCellsRelatedCells();
+    }
   }
 }
 
@@ -176,8 +181,8 @@ Array.prototype.findNestedIndex = function(value) {
 }
 
 function updateKnownSolvedCellsWithIndices(findIndicesFor) {
-  for (var i = 1; i <= 9; i++) {
-    var indices = findIndicesFor(i);
+  for (var gridSegment = 1; gridSegment <= 9; gridSegment++) {
+    var indices = findIndicesFor(gridSegment);
     var cells = cellsForIndices(indices);
     for (var number = 1; number <= 9; number++) {
       if (cells.unsolvedCellsWith(number).length === 1) {
@@ -198,6 +203,34 @@ function updateKnownSolvedCellsInCols() {
 
 function updateKnownSolvedCellsInQuadrants() {
   updateKnownSolvedCellsWithIndices(indicesInQuadrant);
+}
+
+function updateQuadrantSolvedCellsRelatedCells() {
+  updateQuadrantSolvedCellsRelatedRows();
+  updateQuadrantSolvedCellsRelatedCols();
+}
+
+function updateQuadrantSolvedCellsRelatedRows() {
+  for (var quadrant = 1; quadrant <= 9; quadrant++) {
+    var indices = indicesInQuadrant(quadrant);
+    var cells = cellsForIndices(indices);
+    for (var number = 1; number <= 9; number++) {
+      var localIndices = [];
+      cells.forEach(function(cell, i) {
+        if (cell.includes(number)) {
+          localIndices.push(i);
+        }
+      });
+      if (localIndices.length > 1 &&
+          localIndices.filter(function(i) {
+            return row(i) === row(localIndices[0]);
+          }).length === localIndices.length) {
+        // here, there is more than one instance of number, and they are all in the same row
+      }
+    }
+  }
+  
+  //removeNumberFromIndices(number, indices);
 }
 
 function setupPage() {
