@@ -1,6 +1,8 @@
-var board = [];
-for (var cell = 0; cell < 81; cell++) {
-  board.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+function setupBoard() {
+  var board = [];
+  for (var cell = 0; cell < 81; cell++) {
+    board.push([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  }
 }
 
 function row(index) {
@@ -198,3 +200,15 @@ function updateKnownSolvedCellsInQuadrants() {
   updateKnownSolvedCellsWithIndices(indicesInQuadrant);
 }
 
+function setupPage() {
+ setupBoard();
+ renderInput();
+ $('#button').click(function() {
+   applyInputToBoard();
+   renderBoard();
+   // begin render loop
+   // begin solve loop
+ });
+}
+
+setupPage();
