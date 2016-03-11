@@ -15,11 +15,11 @@ function quadrant(index) {
   return Math.floor((row(index) - 1) / 3) * 3 + Math.floor((col(index) - 1) / 3) + 1;
 }
 
-//function cellsForIndices(indices) {
-  //return indices.map(function(i) {
-    //return board[i];
-  //});
-//}
+function cellsForIndices(indices) {
+  return indices.map(function(i) {
+    return board[i];
+  });
+}
 
 function applyFormulaToGetIndices(formula) {
   return [0, 1, 2, 3, 4, 5, 6, 7, 8].map(formula);
@@ -110,7 +110,7 @@ function solve() {
   if (initialChecksum !== boardChecksum()) {
     solve();
   } else {
-    
+    updateKnownSolvedCells();
   }
 }
 
@@ -154,3 +154,47 @@ function clearQuadrantOfNumber(quadrant, number) {
   var indices = indicesInQuadrant(quadrant);
   removeNumberFromIndices(number, indices);
 }
+
+function updateKnownSolvedCells() {
+  updateKnownSolvedCellsInRows();
+  updateKnownSolvedCellsInCols();
+  updateKnownSolvedCellsInQuadrants();
+}
+
+Array.prototype.unsolvedCellsWith = function(value) {
+  return this.filter(function(element) {
+    return element.includes(value) && element.length !== 1;
+  });
+}
+
+Array.prototype.findNestedIndex = function(value) {
+  return this.findIndex(function(element) {
+    return element.includes(value);
+  });
+}
+
+function updateKnownSolvedCellsWithIndices(findIndicesFor) {
+  for (var i = 1; i <= 9; i++) {
+    var indices = findIndicesFor(i);
+    var cells = cellsForIndices(indices);
+    for (var number = 1; number <= 9; number++) {
+      if (cells.unsolvedCellsWith(number).length === 1) {
+        var localIndex = cells.findNestedIndex(number);
+        board[indices[localIndex]] = [number];
+      }
+    }
+  }
+}
+
+function updateKnownSolvedCellsInRows() {
+  updateKnownSolvedCellsWithIndices(indicesInRow);
+}
+
+function updateKnownSolvedCellsInCols() {
+  updateKnownSolvedCellsWithIndices(indicesInCol);
+}
+
+function updateKnownSolvedCellsInQuadrants() {
+  updateKnownSolvedCellsWithIndices(indicesInQuadrant);
+}
+
