@@ -98,9 +98,20 @@ function applyInputToBoard() {
   });
 }
 
+function boardChecksum() {
+  return board.reduce(function(sum, cell) {
+    return sum + cell.length;
+  }, 0);
+}
+
 function solve() {
+  var initialChecksum = boardChecksum();
   updateSolvedCellRelatedCells();
-  // check if board has changed, if it has, start again, otherwise, keep going
+  if (initialChecksum !== boardChecksum()) {
+    solve();
+  } else {
+    
+  }
 }
 
 function updateSolvedCellRelatedCells() {
