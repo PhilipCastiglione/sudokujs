@@ -16,36 +16,32 @@ function quadrant(index) {
   return Math.floor((row(index) - 1) / 3) * 3 + Math.floor((col(index) - 1) / 3) + 1;
 }
 
-function cellsForIndices(indices) {
-  return indices.map(function(i) {
-    return board[i];
-  });
+//function cellsForIndices(indices) {
+  //return indices.map(function(i) {
+    //return board[i];
+  //});
+//}
+
+function applyFormulaToGetIndices(formula) {
+  return [0, 1, 2, 3, 4, 5, 6, 7, 8].map(formula);
 }
 
 function indicesInRow(row) {
-  var index = (row - 1) * 9;
-  var indices = [];
-  for (var col = 0; col < 9; col++) {
-    indices = indices.concat(index + col);
-  }
-  return indices;
+  return applyFormulaToGetIndices(function(i) {
+    return (row - 1) * 9 + i;
+  });
 }
 
 function indicesInCol(col) {
-  var indices = [];
-  for (var row = 0; row < 9; row++) {
-    indices = indices.concat(col - 1 + row * 9);
-  }
-  return indices;
+  return applyFormulaToGetIndices(function(i) {
+    return col - 1 + i * 9;
+  });
 }
 
 function indicesInQuadrant(quadrant) {
-  var firstIndex = Math.floor((quadrant - 1) / 3) * 9 * 3 + (quadrant - 1) % 3 * 3;
-  var indices = [];
-  for (var i = 0; i < 9; i++) {
-    indices = indices.concat(firstIndex + Math.floor(i / 3) * 9 + i % 3);
-  }
-  return indices;
+  return applyFormulaToGetIndices(function(i) {
+    return Math.floor((quadrant - 1) / 3) * 9 * 3 + (quadrant - 1) % 3 * 3 + Math.floor(i / 3) * 9 + i % 3;
+  });
 }
 
 function renderBoard() {
