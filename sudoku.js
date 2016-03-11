@@ -123,29 +123,25 @@ Array.prototype.remove = function(value) {
   return this;
 };
 
-function clearRowOfNumber(row, number) {
-  var indices = indicesInRow(row);
+function removeNumberFromIndices(number, indices) {
   indices.forEach(function(i) {
     if (board[i].length > 1) {
       board[i].remove(number);
     }
   });
+}
+
+function clearRowOfNumber(row, number) {
+  var indices = indicesInRow(row);
+  removeNumberFromIndices(number, indices);
 }
 
 function clearColOfNumber(col, number) {
   var indices = indicesInCol(col);
-  indices.forEach(function(i) {
-    if (board[i].length > 1) {
-      board[i].remove(number);
-    }
-  });
+  removeNumberFromIndices(number, indices);
 }
 
 function clearQuadrantOfNumber(quadrant, number) {
   var indices = indicesInQuadrant(quadrant);
-  indices.forEach(function(i) {
-    if (board[i].length > 1) {
-      board[i].remove(number);
-    }
-  });
+  removeNumberFromIndices(number, indices);
 }
